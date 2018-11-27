@@ -1,6 +1,6 @@
-RSpec.describe Zpl::Scaler do
+RSpec.describe ZplScaler::Scaler do
   it "has a version number" do
-    expect(Zpl::Scaler::VERSION).not_to be nil
+    expect(ZplScaler::VERSION).not_to be nil
   end
 
   it "does something useful" do
