@@ -11,7 +11,7 @@ module ZplScaler
     attr_accessor :name
     attr_accessor :params
 
-    def initialize name, params
+    def initialize(name, params)
       @name = name
       @params = params
     end
@@ -30,7 +30,7 @@ module ZplScaler
     RX_ZPL_COMMAND = /\^([A-Z0-9]{2})([^\^]*)/
 
     # Returns the list of unique commands used in the given ZPL.
-    def self.uniq_commands zpl_content
+    def self.uniq_commands(zpl_content)
       uniq_cmds = Set.new
       new(zpl_content).each_command do |cmd|
         uniq_cmds << cmd.name
@@ -39,7 +39,7 @@ module ZplScaler
     end
 
     # Creates a new reader that will read ZPL commands from *content* string.
-    def initialize content
+    def initialize(content)
       @scanner = StringScanner.new content
     end
 
@@ -140,7 +140,7 @@ module ZplScaler
       COMMANDS_PARAM_INDEXES_TO_SCALE["A" + font_name] = [1, 2]
     end
 
-    def self.ratio_scale zpl_content, scale_ratio
+    def self.ratio_scale(zpl_content, scale_ratio)
       reader = ZplReader.new zpl_content
       scaled_zpl = StringIO.new
 
@@ -158,11 +158,11 @@ module ZplScaler
 
     protected
 
-    def self.cmd_need_scale? cmd
+    def self.cmd_need_scale?(cmd)
       !!COMMANDS_PARAM_INDEXES_TO_SCALE[cmd.name]
     end
 
-    def self.scale_cmd! cmd, scale_ratio
+    def self.scale_cmd!(cmd, scale_ratio)
       return unless cmd_need_scale? cmd
 
       puts "Scaling cmd named: #{ cmd.name } with params: #{ cmd.params.inspect }"
@@ -185,7 +185,7 @@ module ZplScaler
 
     # Returns an integer converted from the string *param*, or nil if it cannot be
     # converted.
-    def self.param_to_i? param
+    def self.param_to_i?(param)
       begin
         Integer(param)
       rescue ArgumentError # raised when *param* string cannot be converted to Integer
@@ -194,13 +194,13 @@ module ZplScaler
     end
   end
 
-  def self.dpi_scale zpl_content, from_dpi, to_dpi
+  def self.dpi_scale(zpl_content, from_dpi, to_dpi)
     scale_ratio = to_dpi.to_f / from_dpi.to_f
 
     Scaler.ratio_scale(zpl_content, scale_ratio)
   end
 
-  def self.ratio_scale zpl_content, scale_ratio
+  def self.ratio_scale(zpl_content, scale_ratio)
     Scaler.ratio_scale(zpl_content, scale_ratio)
   end
 
