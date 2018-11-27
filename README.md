@@ -23,6 +23,20 @@ Or install it yourself as:
 
 ## Usage
 
+**Simple example**:
+```rb
+require 'zpl-scaler'
+
+# Scale by dpi:
+ZplScaler.dpi_scale '^XA^GB12,30,2,B^XZ', from_dpi: 203, to_dpi: 300
+# => "^XA^GB17,44,2,B^XZ"
+
+# Scale by ratio:
+ZplScaler.ratio_scale '^XA^GB12,30,2,B^XZ', 1.2
+# => "^XA^GB14,36,2,B^XZ"
+```
+
+**Complete example**:
 ```rb
 require 'zpl-scaler'
 
@@ -31,7 +45,7 @@ zpl_content = File.read("label_at_203dpi.zpl")
 puts '-- Unique used commands ----'
 p ZplScaler::ZplReader.uniq_commands zpl_content
 
-scaled_zpl = ZplScaler::Scaler.scale_203_to_300dpi zpl_content
+scaled_zpl = ZplScaler.dpi_scale zpl_content, from_dpi: 203, to_dpi: 300
 
 puts '-- Scaled ZPL --------------'
 puts scaled_zpl
