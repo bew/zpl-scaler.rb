@@ -1,16 +1,15 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "zpl/scaler/version"
+require "zpl-scaler/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "zpl-scaler"
-  spec.version       = Zpl::Scaler::VERSION
+  spec.version       = ZplScaler::VERSION
   spec.authors       = ["Benoit de Chezelles"]
   spec.email         = ["benoit.dechezelles@gmail.com"]
 
   spec.summary       = %q{Simple gem to scale ZPL label}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
   spec.homepage      = "https://github.com/bew/zpl-scaler.rb"
   spec.license       = "MIT"
 
