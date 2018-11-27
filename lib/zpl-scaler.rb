@@ -140,13 +140,11 @@ module ZplScaler
       COMMANDS_PARAM_INDEXES_TO_SCALE["A" + font_name] = [1, 2]
     end
 
-    def self.dpi_scale zpl_content, from_dpi, to_dpi
-      scale_ratio = to_dpi.to_f / from_dpi.to_f
-
+    def self.ratio_scale zpl_content, scale_ratio
       reader = ZplReader.new zpl_content
       scaled_zpl = StringIO.new
 
-      puts "Scaling from #{ from_dpi } to #{ to_dpi } (scale_ratio: #{ scale_ratio })"
+      puts "Scaling with ratio: #{ scale_ratio }"
 
       reader.each_command do |cmd|
         scale_cmd!(cmd, scale_ratio)
@@ -197,7 +195,13 @@ module ZplScaler
   end
 
   def self.dpi_scale zpl_content, from_dpi, to_dpi
-    Scaler.dpi_scale(zpl_content, from_dpi, to_dpi)
+    scale_ratio = to_dpi.to_f / from_dpi.to_f
+
+    Scaler.ratio_scale(zpl_content, scale_ratio)
+  end
+
+  def self.ratio_scale zpl_content, scale_ratio
+    Scaler.ratio_scale(zpl_content, scale_ratio)
   end
 
 end
