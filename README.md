@@ -1,8 +1,9 @@
-# Zpl::Scaler
+# ZplScaler
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/zpl/scaler`. To experiment with that code, run `bin/console` for an interactive prompt.
+TODO: why?!
 
-TODO: Delete this and the text above, and describe your gem
+
+TODO: list handled commands (only the commands that manipulate coordinates and that need to be re-calculated, all other commands are ignored and left as is)
 
 ## Installation
 
@@ -22,7 +23,23 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```rb
+require 'zpl-scaler'
+
+zpl_content = File.read("label_at_203dpi.zpl")
+
+puts '-- Unique used commands ----'
+p ZplScaler::ZplReader.uniq_commands zpl_content
+
+scaled_zpl = ZplScaler::Scaler.scale_203_to_300dpi zpl_content
+
+puts '-- Scaled ZPL --------------'
+puts scaled_zpl
+
+File.open("label_at_300dpi.zpl", "w") do |file|
+  file.write(scaled_zpl)
+end
+```
 
 ## Development
 
