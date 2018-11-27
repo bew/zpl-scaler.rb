@@ -183,7 +183,7 @@ module ZplScaler
     end
   end
 
-  def self.dpi_scale(zpl_content, from_dpi, to_dpi)
+  def self.dpi_scale(zpl_content, from_dpi:, to_dpi:)
     scale_ratio = to_dpi.to_f / from_dpi.to_f
 
     Scaler.ratio_scale(zpl_content, scale_ratio)
