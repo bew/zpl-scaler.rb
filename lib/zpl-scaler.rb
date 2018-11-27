@@ -140,11 +140,7 @@ module ZplScaler
       COMMANDS_PARAM_INDEXES_TO_SCALE["A" + font_name] = [1, 2]
     end
 
-    def self.scale_203_to_300dpi zpl_content
-      dpi_scale_raw_zpl zpl_content, 203, 300
-    end
-
-    def self.dpi_scale_raw_zpl zpl_content, from_dpi, to_dpi
+    def self.dpi_scale zpl_content, from_dpi, to_dpi
       scale_ratio = to_dpi.to_f / from_dpi.to_f
 
       reader = ZplReader.new zpl_content
@@ -198,6 +194,10 @@ module ZplScaler
         nil
       end
     end
+  end
+
+  def self.dpi_scale zpl_content, from_dpi, to_dpi
+    Scaler.dpi_scale(zpl_content, from_dpi, to_dpi)
   end
 
 end
