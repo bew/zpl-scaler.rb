@@ -144,13 +144,9 @@ module ZplScaler
       reader = ZplReader.new zpl_content
       scaled_zpl = StringIO.new
 
-      puts "Scaling with ratio: #{ scale_ratio }"
-
       reader.each_command do |cmd|
         scale_cmd!(cmd, scale_ratio)
         scaled_zpl << cmd.to_zpl_string
-
-        puts
       end
 
       scaled_zpl.string
@@ -165,20 +161,13 @@ module ZplScaler
     def self.scale_cmd!(cmd, scale_ratio)
       return unless cmd_need_scale? cmd
 
-      puts "Scaling cmd named: #{ cmd.name } with params: #{ cmd.params.inspect }"
-
       cmd_params = cmd.params
 
       param_indexes_to_scale = COMMANDS_PARAM_INDEXES_TO_SCALE[cmd.name]
       param_indexes_to_scale.each do |param_index|
 
-        puts "Param #{ param_index } before: #{ cmd_params[param_index] }"
-
         if (param_s = cmd_params[param_index]) && (param_i = param_to_i?(param_s))
           cmd_params[param_index] = (param_i * scale_ratio).to_i
-
-          puts "    param_i: #{ param_i }"
-          puts "    after: #{ cmd_params[param_index] }"
         end
       end
     end
