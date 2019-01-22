@@ -165,7 +165,6 @@ module ZplScaler
 
       param_indexes_to_scale = COMMANDS_PARAM_INDEXES_TO_SCALE[cmd.name]
       param_indexes_to_scale.each do |param_index|
-
         if (param_s = cmd_params[param_index]) && (param_i = param_to_i?(param_s))
           cmd_params[param_index] = (param_i * scale_ratio).to_i
         end
