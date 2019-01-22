@@ -1,9 +1,38 @@
 # ZplScaler
 
-TODO: why?!
+## Why
+
+Our Zebra printer has a 300dpi resolution, and can only handle ZPL that is to be printed by a 300dpi printer.
+
+Some shipping API are not configurable enough, and can return ZPL code that is to be printed by a 203dpi printer.
+
+We needed a way to scale a ZPL code from 203dpi to 300dpi.
 
 
-TODO: list handled commands (only the commands that manipulate coordinates and that need to be re-calculated, all other commands are ignored and left as is)
+## How it works
+
+It works by parsing the ZPL commands and emitting new commands after scaling some of their arguments if needed.
+The parsing is simple and doesn't handle all corner cases like the change of control character (the parser always assume it's `^`).
+
+Here is the list of commands that can be scaled currently:
+
+- `^MN` - Media Tracking
+- `^BY` - Bar Code Field Default
+- `^FO` - Field Origin
+- `^B2` - Interleaved 2 of 5 Bar Code
+- `^GB` - Graphic Box
+- `^BC` - Code 128 Bar Code (Subsets A, B, and C)
+- `^A#` commands, where `#` is a font name (`[A-Z0-9]`) - Scalable/Bitmapped Font
+
+These commands have at least one argument that is a coordinate (in dots) and need to be recalculated (scaled).
+The non-coordinate arguments and all other commands not listed above are not touched and left as is.
+
+This gem only handles a few ZPL commands we needed, feel free to send a PR to add support for a ZPL command you need to be scaled.
+
+Note that some commands won't ever be handled correctly, like:
+- images that are embedded in the ZPL code won't be scaled
+- using fonts that are not supposed to be scaled or cannot be
+
 
 ## Installation
 
@@ -20,6 +49,7 @@ And then execute:
 Or install it yourself as:
 
     $ gem install zpl-scaler
+
 
 ## Usage
 
