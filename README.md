@@ -31,7 +31,7 @@ This gem only handles a few ZPL commands we needed, feel free to send a PR to ad
 
 Note that some commands won't ever be handled correctly, like:
 - images that are embedded in the ZPL code won't be scaled
-- using fonts that are not supposed to be scaled or cannot be
+- bitmapped fonts, those fonts cannot be precisely scaled: their new scale must be a multiple of the original width/height for the scaling to be visible
 
 
 ## Installation
