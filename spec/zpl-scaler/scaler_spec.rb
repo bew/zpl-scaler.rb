@@ -1,9 +1,5 @@
-RSpec.describe ZplScaler::Scaler do
+RSpec.describe ZplScaler do
   it "has a version number" do
     expect(ZplScaler::VERSION).not_to be nil
-  end
-
-  it "does something useful" do
-    expect(false).to eq(true)
   end
 end

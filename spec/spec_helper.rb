@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "zpl/scaler"
+require "zpl-scaler"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

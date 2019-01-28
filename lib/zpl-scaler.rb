@@ -22,7 +22,7 @@ module ZplScaler
     end
   end
 
-  # NOTE: doesn't handle ZPL that changes the control char (default: '^')
+  # NOTE: doesn't handle ZPL that changes the control char (default is assumed: '^')
   class ZplReader
     # Example format: ^XXparam1,param2,,param4
     # ZplCommand name: XX (the command is read as 2 chars, no more no less)
@@ -50,9 +50,11 @@ module ZplScaler
       @scanner.scan(RX_ZPL_COMMAND)
 
       cmd_name = @scanner[1]
-      raw_params = @scanner[2]
+      raw_params = @scanner[2]&.strip
 
-      ZplCommand.new(cmd_name, raw_params&.split(',') || [])
+      params = raw_params&.split(',', -1) || []
+      params.each { |param| param.strip! }
+      ZplCommand.new(cmd_name, params)
     end
 
     # Yields each ZPL command to the block. Stops when there are no more commands to read.
@@ -66,8 +68,6 @@ module ZplScaler
   # TODO: doc
   # It works by parsing ZPL commands, then edit the parameters of specific commands
   # to scale the coordinates to the new dpi
-  #
-  # NOTE: Cannot work for embedded images
   class Scaler
     COMMANDS_PARAM_INDEXES_TO_SCALE = {
       # ^MN - Media Tracking
