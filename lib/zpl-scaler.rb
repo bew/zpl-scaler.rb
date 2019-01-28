@@ -1,6 +1,6 @@
-require 'zpl-scaler/version'
-require 'zpl-scaler/reader'
-require 'zpl-scaler/scaler'
+require_relative './zpl-scaler/version'
+require_relative './zpl-scaler/reader'
+require_relative './zpl-scaler/scaler'
 
 module ZplScaler
 
