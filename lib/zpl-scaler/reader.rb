@@ -10,15 +10,6 @@ module ZplScaler
     # 4 (5) params (param 3 & 5 are not given)
     RX_ZPL_COMMAND = /\^([A-Z0-9@]{2})([^\^]*)/
 
-    # Returns the list of unique commands used in the given ZPL.
-    def self.uniq_commands(zpl_content)
-      uniq_cmds = Set.new
-      new(zpl_content).each_command do |cmd|
-        uniq_cmds << cmd.name
-      end
-      uniq_cmds.to_a
-    end
-
     # Creates a new reader that will read ZPL commands from *content* string.
     def initialize(content)
       @scanner = StringScanner.new content

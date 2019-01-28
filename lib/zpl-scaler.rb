@@ -14,4 +14,13 @@ module ZplScaler
     Scaler.ratio_scale(zpl_content, scale_ratio)
   end
 
+  # Returns the list of unique commands used in the given ZPL.
+  def self.uniq_commands(zpl_content)
+    uniq_cmds = Set.new
+    Reader.new(zpl_content).each_command do |cmd|
+      uniq_cmds << cmd.name
+    end
+    uniq_cmds.to_a
+  end
+
 end
