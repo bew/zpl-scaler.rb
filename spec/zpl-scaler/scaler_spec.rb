@@ -11,13 +11,6 @@ RSpec.describe ZplScaler::Scaler do
     expect(ZplScaler::Scaler.ratio_scale(code, 1.0)).to eq code
   end
 
-  it "2:1 scale" do
-    code = "^MN42,10^BC42,10"
-    scaled_code = "^MN42,20^BC42,20"
-
-    expect(ZplScaler::Scaler.ratio_scale(code, 2.0)).to eq scaled_code
-  end
-
   def self.it_scales_by_2_cmd(cmd_name, input_args, scaled_args)
     it "scales 2:1 cmd ^#{ cmd_name }" do
       input_code = "^#{ cmd_name }#{ input_args }"
@@ -32,4 +25,11 @@ RSpec.describe ZplScaler::Scaler do
   it_scales_by_2_cmd "B2", "1,1,1", "1,2,1"
   it_scales_by_2_cmd "GB", "1,1,1,1,1", "2,2,2,1,1"
   it_scales_by_2_cmd "BC", "1,1,1,1,1,1", "1,2,1,1,1,1"
+
+  it "2:1 scale on multiple zpl cmd" do
+    code = "^MN42,10^BC42,10"
+    scaled_code = "^MN42,20^BC42,20"
+
+    expect(ZplScaler::Scaler.ratio_scale(code, 2.0)).to eq scaled_code
+  end
 end
