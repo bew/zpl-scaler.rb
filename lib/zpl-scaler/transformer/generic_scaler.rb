@@ -1,12 +1,10 @@
-require_relative './command'
-require_relative './reader'
-# TODO: remove dep on reader, scaler should be a cmd processor that's all
+require_relative './base_scaler'
 
-module ZplScaler
+module ZplScaler::Transformer
   # TODO: doc
   # It works by parsing ZPL commands, then edit the parameters of specific commands
   # to scale the coordinates to the new dpi
-  class Scaler
+  class GenericScaler < BaseScaler
     COMMANDS_PARAM_INDEXES_TO_SCALE = {
       # ^MN - Media Tracking
       #
@@ -55,52 +53,19 @@ module ZplScaler
       "BC" => [1],
     }
 
-    # ^A - Scalable/Bitmapped Font
-    #
-    # Param -1: font name (value: [A-Z0-9])
-    # Param  0: field orientation (enum)
-    # Param  1: character height in dots
-    # Param  2: width in dots
-    #
-    # (Param -1 is part of the command name, it will not appear in ZplCommand's params)
-    # ---
-    # This must be done externally because the command is 1 char long, with the second
-    # char being the font name, this means there are 36 2-char commands with the same
-    # fonctionnality.
-    #
-    # So instead of:
-    # AA: [....]
-    # AB: [....]
-    # AC: [....]
-    # etc..
-    # We simply generate it. Simple.
-    (('A'..'Z').to_a.concat ('0'..'9').to_a).each do |font_name|
-      COMMANDS_PARAM_INDEXES_TO_SCALE["A" + font_name] = [1, 2]
-    end
-
-    # TODO: embed font matrix, add scaling handling for scalable fonts only.
-    #         V
-    #       maybe not here though?
-
-    def self.ratio_scale(zpl_content, scale_ratio)
-      reader = ZplReader.new zpl_content
-      scaled_zpl = StringIO.new
-
-      reader.each_command do |cmd|
-        scale_cmd!(cmd, scale_ratio)
-        scaled_zpl << cmd.to_zpl_string
-      end
-
-      scaled_zpl.string
+    def map_cmd(cmd)
+      # TODO: cleanup (remove scale_cmd! indirection ?)
+      scale_cmd!(cmd, scale_ratio)
+      cmd
     end
 
     protected
 
-    def self.cmd_need_scale?(cmd)
+    def cmd_need_scale?(cmd)
       !!COMMANDS_PARAM_INDEXES_TO_SCALE[cmd.name]
     end
 
-    def self.scale_cmd!(cmd, scale_ratio)
+    def scale_cmd!(cmd, scale_ratio)
       return unless cmd_need_scale? cmd
 
       cmd_params = cmd.params
@@ -110,16 +75,6 @@ module ZplScaler
         if (param_s = cmd_params[param_index]) && (param_i = param_to_i?(param_s))
           cmd_params[param_index] = (param_i * scale_ratio).to_i
         end
-      end
-    end
-
-    # Returns an integer converted from the string *param*, or nil if it cannot be
-    # converted.
-    def self.param_to_i?(param)
-      begin
-        Integer(param)
-      rescue ArgumentError # raised when *param* string cannot be converted to Integer
-        nil
       end
     end
   end
