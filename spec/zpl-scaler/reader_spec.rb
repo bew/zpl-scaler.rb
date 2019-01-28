@@ -18,6 +18,7 @@ RSpec.describe ZplScaler::ZplReader do
   it_parses_cmd "^AB42,-21,z", "AB", ["42", "-21", "z"]
   it_parses_cmd "^AB^CD", "AB", []
   it_parses_cmd "^AB\n\n^CD", "AB", []
+  it_parses_cmd "^A@R,10,10,R:font.ttf", "A@", ["R", "10", "10", "R:font.ttf"]
 
   it "parses a single zpl cmd to ruby and back" do
     code = "^XY1,2,3"

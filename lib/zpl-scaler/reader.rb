@@ -8,7 +8,7 @@ module ZplScaler
     # Example format: ^XXparam1,param2,,param4
     # ZplCommand name: XX (the command is read as 2 chars, no more no less)
     # 4 (5) params (param 3 & 5 are not given)
-    RX_ZPL_COMMAND = /\^([A-Z0-9]{2})([^\^]*)/
+    RX_ZPL_COMMAND = /\^([A-Z0-9@]{2})([^\^]*)/
 
     # Returns the list of unique commands used in the given ZPL.
     def self.uniq_commands(zpl_content)
