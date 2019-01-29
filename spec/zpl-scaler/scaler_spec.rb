@@ -4,18 +4,20 @@ RSpec.describe ZplScaler do
   end
 end
 
-RSpec.describe ZplScaler::Scaler do
+RSpec.describe ZplScaler::Transformer::GenericScaler do
   it "1:1 scale gives same zpl code" do
     code = "^MN42,10^BCA,10"
 
-    expect(ZplScaler::Scaler.ratio_scale(code, 1.0)).to eq code
+    tr = ZplScaler::Transformer::GenericScaler.new(1.0)
+    expect(tr.apply(code)).to eq code
   end
 
   def self.it_scales_by_2_cmd(cmd_name, input_args, scaled_args)
     it "scales 2:1 cmd ^#{ cmd_name }" do
       input_code = "^#{ cmd_name }#{ input_args }"
       scaled_code = "^#{ cmd_name }#{ scaled_args }"
-      expect(ZplScaler::Scaler.ratio_scale(input_code, 2.0)).to eq scaled_code
+      tr = ZplScaler::Transformer::GenericScaler.new(2.0)
+      expect(tr.apply(input_code)).to eq scaled_code
     end
   end
 
@@ -30,6 +32,7 @@ RSpec.describe ZplScaler::Scaler do
     code = "^MN42,10^BC42,10"
     scaled_code = "^MN42,20^BC42,20"
 
-    expect(ZplScaler::Scaler.ratio_scale(code, 2.0)).to eq scaled_code
+    tr = ZplScaler::Transformer::GenericScaler.new(2.0)
+    expect(tr.apply(code)).to eq scaled_code
   end
 end

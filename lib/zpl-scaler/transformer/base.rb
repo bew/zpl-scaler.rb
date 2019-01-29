@@ -33,6 +33,8 @@ module ZplScaler
         Integer(param)
       rescue ArgumentError # raised when *param* string cannot be converted to Integer
         nil
+      rescue TypeError # raised when *param* is nil
+        nil
       end
     end
   end

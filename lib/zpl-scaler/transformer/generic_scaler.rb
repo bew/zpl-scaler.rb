@@ -5,6 +5,9 @@ module ZplScaler::Transformer
   # It works by parsing ZPL commands, then edit the parameters of specific commands
   # to scale the coordinates to the new dpi
   class GenericScaler < BaseScaler
+
+    # TODO: doc - what is this hash for? format?
+    # TODO: rewrite?
     COMMANDS_PARAM_INDEXES_TO_SCALE = {
       # ^MN - Media Tracking
       #
@@ -54,8 +57,17 @@ module ZplScaler::Transformer
     }
 
     def map_cmd(cmd)
-      # TODO: cleanup (remove scale_cmd! indirection ?)
-      scale_cmd!(cmd, scale_ratio)
+      return cmd unless cmd_need_scale? cmd
+
+      cmd_params = cmd.params
+
+      param_indexes_to_scale = COMMANDS_PARAM_INDEXES_TO_SCALE[cmd.name]
+      param_indexes_to_scale.each do |param_index|
+        if param_i = param_to_i?(cmd_params[param_index])
+          cmd_params[param_index] = scale_single_number(param_i)
+        end
+      end
+
       cmd
     end
 
@@ -65,17 +77,5 @@ module ZplScaler::Transformer
       !!COMMANDS_PARAM_INDEXES_TO_SCALE[cmd.name]
     end
 
-    def scale_cmd!(cmd, scale_ratio)
-      return unless cmd_need_scale? cmd
-
-      cmd_params = cmd.params
-
-      param_indexes_to_scale = COMMANDS_PARAM_INDEXES_TO_SCALE[cmd.name]
-      param_indexes_to_scale.each do |param_index|
-        if (param_s = cmd_params[param_index]) && (param_i = param_to_i?(param_s))
-          cmd_params[param_index] = (param_i * scale_ratio).to_i
-        end
-      end
-    end
   end
 end
