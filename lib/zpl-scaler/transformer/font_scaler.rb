@@ -41,7 +41,7 @@ module ZplScaler::Transformer
         return raw_cmd
       end
 
-      given_height, given_width = extract_size(raw_cmd, cmd_kind)
+      given_height, given_width = extract_given_sizes(raw_cmd, cmd_kind)
 
       unless given_height && given_width
         # Either param height or width is not given, this is not supported.
@@ -90,7 +90,7 @@ module ZplScaler::Transformer
 
     private
 
-    def extract_size(cmd, cmd_kind)
+    def extract_given_sizes(cmd, cmd_kind)
       # Format for ^CF: ^CFfont,height,width
       #    With `font`: the short font name [A-Z0-9]
       # Format for ^A: ^A#orient,height,width

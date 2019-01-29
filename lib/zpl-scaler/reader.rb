@@ -11,8 +11,9 @@ module ZplScaler
     RX_ZPL_COMMAND = /\^([A-Z0-9@]{2})([^\^]*)/
 
     # Creates a new reader that will read ZPL commands from *content* string.
-    def initialize(content)
+    def initialize(content, strip_spaces: true)
       @scanner = StringScanner.new content
+      @strip_spaces = strip_spaces
     end
 
     # Returns the next zpl command if any, or nil.
@@ -22,10 +23,15 @@ module ZplScaler
       @scanner.scan(RX_ZPL_COMMAND)
 
       cmd_name = @scanner[1]
-      raw_params = @scanner[2]&.strip
+      raw_params = @scanner[2]
+      if @strip_spaces
+        raw_params = raw_params&.strip
+      end
 
       params = raw_params&.split(',', -1) || []
-      params.each { |param| param.strip! }
+      if @strip_spaces
+        params.each { |param| param.strip! }
+      end
       ZplCommand.new(cmd_name, params)
     end
 
