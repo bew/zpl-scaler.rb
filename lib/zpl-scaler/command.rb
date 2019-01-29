@@ -5,7 +5,7 @@ module ZplScaler
     attr_accessor :name
     attr_accessor :params
 
-    def initialize(name, params)
+    def initialize(name, params = [])
       @name = name
       @params = params
     end
