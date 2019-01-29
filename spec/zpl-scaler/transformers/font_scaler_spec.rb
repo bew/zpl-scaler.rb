@@ -39,7 +39,15 @@ RSpec.describe ZplScaler::Transformer::FontScaler do
     expect(tr.apply(partial_font_cmd)).to eq partial_font_cmd
   end
 
-  it "changes to a smaller font when allowed" do
+  it "2:1 scale on scalable font" do
+    # Font '0' is a scalable font
+
+    code = "^A0,7,7"
+    tr = ZplScaler::Transformer::FontScaler.new(ratio: 2.0)
+    expect(tr.apply(code)).to eq "^A0,14,14"
+  end
+
+  it "scaling changes to a smaller font when allowed" do
     code = "^AD,7,7"
 
     tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.5, allow_font_change: true)
