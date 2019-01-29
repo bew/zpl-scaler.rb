@@ -39,5 +39,14 @@ RSpec.describe ZplScaler::Transformer::FontScaler do
     expect(tr.apply(partial_font_cmd)).to eq partial_font_cmd
   end
 
-  # TODO: test font change
+  it "changes to a smaller font when allowed" do
+    code = "^AD,7,7"
+
+    tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.5, allow_font_change: true)
+    expect(tr.apply(code)).to eq "^AA,27,15"
+    # What happens here:
+    # → 7,7 is normalized to 18,10
+    # → Font D is changed to font A which can also be of size 18,10
+    # → Height/Width sizes are scaled
+  end
 end
