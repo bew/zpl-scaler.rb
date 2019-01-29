@@ -1,9 +1,3 @@
-RSpec.describe ZplScaler do
-  it "has a version number" do
-    expect(ZplScaler::VERSION).not_to be nil
-  end
-end
-
 RSpec.describe ZplScaler::Transformer::GenericScaler do
   it "1:1 scale gives same zpl code" do
     code = "^MN42,10^BCA,10"
@@ -34,5 +28,12 @@ RSpec.describe ZplScaler::Transformer::GenericScaler do
 
     tr = ZplScaler::Transformer::GenericScaler.new(2.0)
     expect(tr.apply(code)).to eq scaled_code
+  end
+
+  it "2:1 scale doesn't change unsupported cmds" do
+    unsupported_cmds = "^AA,1,2^ZZ"
+
+    tr = ZplScaler::Transformer::GenericScaler.new(2.0)
+    expect(tr.apply(unsupported_cmds)).to eq unsupported_cmds
   end
 end

@@ -4,41 +4,33 @@ require_relative './base_scaler'
 
 module ZplScaler::Transformer
 
-  # REFERENCE: doc ^A
-  #
-  # ^A - Scalable/Bitmapped Font
-  #
-  # Param -1: font name (value: [A-Z0-9])
-  # Param  0: field orientation (enum)
-  # Param  1: character height in dots
-  # Param  2: width in dots
-  #
-  # (Param -1 is part of the command name, it will not appear in ZplCommand's params)
-  # ---
-  # This must be done externally because the command is 1 char long, with the second
-  # char being the font name, this means there are 36 2-char commands with the same
-  # fonctionnality.
-  #
-  # So instead of:
-  # AA: [....]
-  # AB: [....]
-  # AC: [....]
-  # etc..
-  # We simply generate it. Simple.
-  (('A'..'Z').to_a.concat ('0'..'9').to_a).each do |font_name|
-    COMMANDS_PARAM_INDEXES_TO_SCALE["A" + font_name] = [1, 2]
-  end
-
-
   # TODO: doc - Explain the algorithm used to scale bitmap font
   #
   # NOTE: will ONLY scale font commands
   # NOTE: doesn't support partial font cmd (yet)
   #       e.g: font with height but not width
   class FontScaler < BaseScaler
+    # Supported font commands
+    #
+    # ^A - Scalable/Bitmapped Font
+    #
+    # Param -1: font name (value: [A-Z0-9])
+    #    Note: This is part of the command name (second char), it will not appear in
+    #    the command's params
+    # Param  0: field orientation (enum)
+    # Param  1: character height in dots
+    # Param  2: character width in dots
+    #
+    #
+    # ^CF - Change default Font
+    #
+    # Param 0: font name (value: [A-Z0-9])
+    # Param 1: character height in dots
+    # Param 2: character width in dots
 
-    def initialize(ratio:)
+    def initialize(ratio:, allow_font_change: false)
       super(ratio)
+      @allow_font_change = allow_font_change
     end
 
     def map_cmd(raw_cmd)
@@ -80,7 +72,10 @@ module ZplScaler::Transformer
 
     def scale_bitmap_font(font_cmd)
       given_font = font_cmd.font
-      new_font = find_smallest_font_matching_size(given_font) || given_font
+      if @allow_font_change
+        new_font = find_smallest_font_matching_size(given_font)
+      end
+      new_font ||= given_font
 
       norm_height, norm_width = given_font.normalize_size(
         height: font_cmd.height,

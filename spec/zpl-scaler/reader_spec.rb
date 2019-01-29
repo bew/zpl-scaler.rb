@@ -1,5 +1,3 @@
-require_relative '../spec_helper'
-
 RSpec.describe ZplScaler::ZplReader do
   def self.it_parses_cmd(zpl_code, cmd_name, cmd_params)
     it "parses cmd #{zpl_code.inspect}" do
