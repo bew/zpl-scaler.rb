@@ -57,4 +57,18 @@ RSpec.describe ZplScaler::ZplReader do
 
     expect(reader.next_command).to be_nil
   end
+
+  it "doesn't strip spaces in commands on demand" do
+    code = "\n  ^AAfoo bar                     ^FS   \n"
+
+    reader = ZplScaler::ZplReader.new(code, strip_spaces: false)
+
+    cmd = reader.next_command
+    expect(cmd.name).to eq "AA"
+    expect(cmd.params).to eq ["foo bar                     "]
+
+    cmd = reader.next_command
+    expect(cmd.name).to eq "FS"
+    expect(cmd.params).to eq ["   "]
+  end
 end

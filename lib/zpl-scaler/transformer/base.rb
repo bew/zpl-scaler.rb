@@ -4,11 +4,12 @@ module ZplScaler
   module Transformer
   end
 
+  # TODO: doc - explain how to make a transformer
   class Transformer::Base
 
     # TODO: doc
-    def apply(zpl_code)
-      reader = ZplReader.new(zpl_code)
+    def apply(zpl_code, strip_spaces: true)
+      reader = ZplReader.new(zpl_code, strip_spaces: strip_spaces)
       transformed_zpl = StringIO.new
 
       while token = reader.next_token
