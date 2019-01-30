@@ -7,7 +7,7 @@ RSpec.describe ZplScaler::Transformer::FontScaler do
   end
 
   it "1:1 scale normalize font sizes" do
-    tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.0)
+    tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.0, allow_font_change: false)
 
     expect(tr.apply("^AA,2,3")).to eq "^AA,9,5"
     expect(tr.apply("^CFA,2,3")).to eq "^CFA,9,5"
@@ -18,7 +18,7 @@ RSpec.describe ZplScaler::Transformer::FontScaler do
       input_zpl = "^A#{font.name},1,1"
       normalized_font_zpl = "^A#{font.name},#{font.base_height},#{font.base_width}"
 
-      tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.0)
+      tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.0, allow_font_change: false)
       expect(tr.apply(input_zpl)).to eq normalized_font_zpl
     end
   end
@@ -50,7 +50,7 @@ RSpec.describe ZplScaler::Transformer::FontScaler do
   it "scaling changes to a smaller font when allowed" do
     code = "^AD,7,7"
 
-    tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.5, allow_font_change: true)
+    tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.5)
     expect(tr.apply(code)).to eq "^AA,27,15"
     # What happens here:
     # → 7,7 is normalized to 18,10

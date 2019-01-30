@@ -28,7 +28,7 @@ module ZplScaler::Transformer
     # Param 1: character height in dots
     # Param 2: character width in dots
 
-    def initialize(ratio:, allow_font_change: false)
+    def initialize(ratio:, allow_font_change: true)
       super(ratio)
       @allow_font_change = allow_font_change
     end
