@@ -7,12 +7,19 @@ module ZplScaler
   class Transformer::Base
 
     # TODO: doc
-    def apply(zpl_code, strip_spaces: true)
-      reader = ZplReader.new(zpl_code, strip_spaces: strip_spaces)
+    def apply(zpl_code)
+      reader = ZplReader.new(zpl_code)
       transformed_zpl = StringIO.new
-      reader.each_command do |cmd|
-        if new_cmd = self.map_cmd(cmd)
-          transformed_zpl << new_cmd.to_zpl_string
+
+      while token = reader.next_token
+        if token.is_a?(ZplCommand)
+          # It's a command, transform it
+          if new_cmd = self.map_cmd(token)
+            transformed_zpl << new_cmd.to_zpl_string
+          end
+        else
+          # Not a command, just append it
+          transformed_zpl << token
         end
       end
 
