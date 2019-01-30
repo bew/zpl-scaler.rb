@@ -42,9 +42,6 @@ module ZplScaler
     #
     ## Scalable font
     # 0       Default: 15 x 12   U-L-D
-    #
-    ## Unsupported font
-    # GS      24 x 24            SYMBOL
 
     AVAILABLE_FONTS = {
       "A" => Font.new(name: "A", base_height: 9, base_width: 5, type: :u_l_d),
