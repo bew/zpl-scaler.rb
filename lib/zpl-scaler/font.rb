@@ -90,8 +90,8 @@ module ZplScaler
     #       10           10
     #       11           20
     def normalize_single_size(input_size, ref_size:)
-      if input_size == ref_size
-        return ref_size
+      if input_size % ref_size == 0
+        input_size
       else
         ((input_size / ref_size) + 1) * ref_size
       end

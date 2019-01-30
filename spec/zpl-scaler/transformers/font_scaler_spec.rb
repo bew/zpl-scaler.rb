@@ -10,6 +10,9 @@ RSpec.describe ZplScaler::Transformer::FontScaler do
     tr = ZplScaler::Transformer::FontScaler.new(ratio: 1.0, allow_font_change: false)
 
     expect(tr.apply("^AA,2,3")).to eq "^AA,9,5"
+    expect(tr.apply("^AA,9,5")).to eq "^AA,9,5"
+    expect(tr.apply("^AA,18,5")).to eq "^AA,18,5"
+    expect(tr.apply("^AAB,22,15")).to eq "^AAB,27,15"
     expect(tr.apply("^CFA,2,3")).to eq "^CFA,9,5"
   end
 
