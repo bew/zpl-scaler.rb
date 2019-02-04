@@ -88,7 +88,13 @@ module ZplScaler::Transformer
       # based on proportion of new_font's base size
       scaled_width = (new_font.base_width.to_f * scaled_height.to_f / new_font.base_height.to_f).to_i
 
-      make_cmd(font_cmd.raw_cmd, font_cmd.kind, new_font, scaled_height, scaled_width)
+      # Normalize again
+      norm_scaled_height, norm_scaled_width = new_font.normalize_size(
+        height: scaled_height,
+        width: scaled_width,
+      )
+
+      make_cmd(font_cmd.raw_cmd, font_cmd.kind, new_font, norm_scaled_height, norm_scaled_width)
     end
 
     private

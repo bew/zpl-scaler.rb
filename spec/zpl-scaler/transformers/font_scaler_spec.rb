@@ -58,6 +58,18 @@ RSpec.describe ZplScaler::Transformer::FontScaler do
     # What happens here:
     # → 7,7 is normalized to 18,10
     # → Font D is changed to font A which can also be of size 18,10
-    # → Height/Width sizes are scaled
+    # → Height/Width sizes are scaled to 27,15
+  end
+
+  it "normalize sizes after scaling a bitmap font" do
+    code = "^AD,7,7"
+
+    tr = ZplScaler::Transformer::FontScaler.new(1.2)
+    expect(tr.apply(code)).to eq "^AA,27,15"
+    # What happens here:
+    # → 7,7 is normalized to 18,10
+    # → Font D is changed to font A which can also be of size 18,10
+    # → Height/Width sizes are scaled to 21,11
+    # → Height/Width sizes are normalized to 27,15
   end
 end
