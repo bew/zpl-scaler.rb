@@ -43,7 +43,6 @@ List of commands that can be scaled currently:
 - `^B2` - Interleaved 2 of 5 Bar Code
 - `^GB` - Graphic Box
 - `^BC` - Code 128 Bar Code (Subsets A, B, and C)
-- `^A#` commands, where `#` is a font name (`[A-Z0-9]`) - Scalable/Bitmapped Font
 
 These commands have at least one argument that is a coordinate (in dots) and need to be recalculated (scaled).
 The non-coordinate arguments and all other commands not listed above are not touched and left as is.
