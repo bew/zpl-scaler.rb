@@ -7,7 +7,7 @@ module ZplScaler::Transformer
   # TODO: doc - Explain the algorithm used to scale bitmap font
   #
   # NOTE: will ONLY scale font commands
-  # NOTE: doesn't support partial font cmd (yet)
+  # NOTE: doesn't support partial font cmd (yet?)
   #       e.g: font with height but not width
   class FontScaler < BaseScaler
     # Supported font commands
@@ -44,7 +44,7 @@ module ZplScaler::Transformer
       given_height, given_width = extract_given_sizes(raw_cmd, cmd_kind)
 
       unless given_height && given_width
-        # Either param height or width is not given, this is not supported.
+        # Either param *height* or *width* is not given, this is not supported.
         # Returning the same command.
         return raw_cmd
       end
@@ -77,13 +77,16 @@ module ZplScaler::Transformer
       end
       new_font ||= given_font
 
-      norm_height, norm_width = given_font.normalize_size(
+      # Normalize
+      norm_height, _ = given_font.normalize_size(
         height: font_cmd.height,
         width: font_cmd.width,
       )
 
       scaled_height = scale_single_number(norm_height)
-      scaled_width = scale_single_number(norm_width)
+      # Proportionnal computation of scaled_width from scaled_height
+      # based on proportion of new_font's base size
+      scaled_width = (new_font.base_width.to_f * scaled_height.to_f / new_font.base_height.to_f).to_i
 
       make_cmd(font_cmd.raw_cmd, font_cmd.kind, new_font, scaled_height, scaled_width)
     end
